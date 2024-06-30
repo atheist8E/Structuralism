@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% block main %}
+	<div class="container-fluid"> 
+        <div class="row" id="search_section">
+            <div class="col-md-12 row px-0 py-1 mx-0 my-0 border border-dark rounded">
+                <form action="{{ url_for('analysis_multiple') }}" method="post" class="container-fluid" id="analysis_condition">
+                    <div class="form-inline my-1">
+                        <label for="inputLineID" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color: lightcyan;">Line ID</label>
+                        <input type="text" id="inputLineID" class="form-control col-md-4" name="LineID" placeholder="Line ID">
+
+                        <label for="inputProcessID" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color: lightcyan;">Process ID</label>
+                        <input type="text" id="inputProcessID" class="form-control col-md-4" name="ProcessID" placeholder="Process ID">
+                    </div>
+                    <div class="form-inline my-1">
+                        <label for="inputCurrentStep" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color: lightcyan;">Current Step</label>
+                        <input type="text" id="inputCurrentStep" class="form-control col-md-4" name="CurrentStep" placeholder="Current Step">    
+
+                        <label for="inputStartStep" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color: lightcyan;">Start Step</label>
+                        <input type="text" id="inputStartStep" class="form-control col-md-4" name="StartStep" placeholder="Start Step">
+                    </div>
+                    <div class="form-inline my-1">
+                        <label for="inputDurationStart" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color: lightcyan;">Duration Start</label>
+                        <input type="date" max="9999-12-31" id="inputDurationStart" class="form-control col-md-4" name="DurationStart" placeholder="Duration Start">     
+
+                        <label for="inputDurationEnd" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color: lightcyan;">Duration End</label>
+                        <input type="date" max="9999-12-31" id="inputDurationEnd" class="form-control col-md-4" name="DurationEnd" placeholder="Duration End"> 
+                    </div>
+                    <div class="form-inline my-1">
+                        <label for="inputCPO" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color:antiquewhite;">CPO</label>
+                        <div class="col-md-4 px-0">
+                            <select id="inputCPO" name="CPO" multiple="multiple">
+                                <option value="G_X_1">G_X_1</option>
+                                <option value="G_Y_1">G_Y_1</option>
+                                <option value="R_X_1">R_X_1</option>
+                                <option value="R_Y_1">R_Y_1</option>
+                                <option value="NIR_X_1">NIR_X_1</option>
+                                <option value="NIR_Y_1">NIR_Y_1</option>
+                                <option value="FIR_X_1">FIR_X_1</option>
+                                <option value="FIR_Y_1">FIR_Y_1</option>
+                            </select>
+                        </div>
+
+                        <label for="inputArea"class="col-md-2 col-form-label font-weight-bold rounded" style="background-color:antiquewhite">Area</label>
+                        <div class="col-md-4 px-0">
+                            <select id="inputArea" name="Area" multiple="multiple">
+                                <option value="PHOTO">PHOTO</option>
+                                <option value="Etch">ETCH</option>
+                                <option value="CMP">CMP</option>
+                                <option value="CVD">CVD</option>
+                                <option value="METAL">METAL</option>
+                                <option value="CLN">CLN</option>
+                                <option value="DIFF">DIFF</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-inline my-1">
+                        <label for="inputDistance" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color:antiquewhite">Distance</label>
+                        <div class="col-md-4 px-0">
+                            <select id="inputDistance" name="Distance">
+                                <option value="WSCS">WSCS</option>
+                                <option value="WCS">WCS</option>
+                                <option value="ROPI">ROPI</option>
+                            </select>
+                        </div>
+
+                        <label for="inputMarkType" class="col-md-2 col-form-label font-weight-bold rounded" style="background-color:antiquewhite">Mark Type</label>
+                        <div class="col-md-4 px-0">
+                            <select id="inputMarkType" name="MarkType">
+                                <option class="text-left" value="Orion_Orion12">Orion + Orion 12</option>
+                                <option class="text-left" value="Orion">Orion</option>
+                                <option class="text-left" value="Orion12">Orion 12</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-inline my-1 justify-content-center">
+                        <div class="col-md-6 d-flex">
+                            <div class="w-50">
+                                <button type="submit" name="type" value="run" form="analysis_condition" class="btn custom_run_button w-100">RUN</button>
+                            </div>
+                            <div class="w-50">
+                                <button type="reset" name="type" value="reset" form="analysis_condition" class="btn custom_clear_button w-100">CLEAR</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row justify-content-center" id="search_button_section">
+            <i class="bi bi-chevron-compact-down" id="search_button"></i>
+        </div>
+        <div class="row" id="result_section">
+        </div>
+        <div class="row" id="result_button_section">
+        </div>
+        <div class="row" id="history_section">
+            <div class="col-md-12 border border-dark rounded">
+                <ul class="list-group mh-100 overflow-auto">
+                    <li class="list-group-item text-center">History</li>
+                    {% for history_index_, history_summary_ in zip(history_index, history_summary) %}
+                    <li class="list-group-item">
+                        <div class="d-flex">
+                            <div class="history_content" id="history_content_{{ history_index_ | safe }}">
+                                {{ history_summary_ | safe }} 
+                            </div> 
+                            <div class="d-flex ml-auto">
+                                <div class="history_info">
+                                    <i class="bi bi-info history_info" id="history_info_{{ history_index_ | safe }}" style="font-size: 1.2rem;"></i>
+                                </div>
+                                <div class="history_play">
+                                    <i class="bi bi-play-fill" id="history_play_{{ history_index_ | safe }}" style="font-size: 1.2rem;"></i>
+                                </div>
+                                <div class="history_trash">
+                                    <i class="bi bi-trash history_trash" id="history_trash_{{ history_index_ | safe }}" style="font-size: 1.2rem;"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div> 
+{% endblock %}
+
+{% block script %}
+<script>
+    $( document ).ready( function() {
+        $( "#search_button" ).click( function() {
+            $( "#search_section" ).slideToggle("slow");
+        } );
+
+        $('.history_info').click( function (){
+            $.ajax({
+                type : "POST",                                  
+                url : "{{ url_for('analysis_multiple') }}",
+                data : {
+                    type: "info",
+                    info_index: this.id,
+                },
+                dataType : 'JSON',
+                success : function(data){
+                    if((data.info_index).includes("spanned")){
+                        $('#' + data.info_index).attr("id", "history_info_" + data.db_index);
+                        $('#' + data.content_index).html(data.content_data);
+                    }
+                    else{
+                        $('#' + data.info_index).attr("id", "history_info_spanned_" + data.db_index);
+                        $('#' + data.content_index).html(data.content_data);
+                    }
+                }
+            });
+            event.preventDefault();
+        });
+
+        $( "#inputCPO" ).multiselect({
+            nonSelectedText: 'Default (All CPO)',
+            buttonWidth: '100%',
+            includeSelectAllOption: true,
+            buttonTextAlignment: 'left'
+        });
+
+        $( "#inputArea" ).multiselect({
+            nonSelectedText: 'Default (PHOTO / ETCH / CMP)',
+            buttonWidth: '100%',
+            includeSelectAllOption: true,
+            buttonTextAlignment: 'left'
+        });
+
+        $( "#inputDistance" ).multiselect({
+            buttonWidth: '100%',
+            buttonTextAlignment: 'left'
+        });
+
+        $( "#inputMarkType" ).multiselect({
+            buttonWidth: '100%',
+            buttonTextAlignment: 'left'
+        });
+
+        $(".multiselect-container button").addClass("d-inline");
+      } );
+
+</script>
+{% endblock %}

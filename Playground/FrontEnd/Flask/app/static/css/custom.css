@@ -1,0 +1,31 @@
+/*===================== Base ======================*/ 
+.custom_navbar{
+    background-color: #371a60 !important;
+}
+.custom_menu{
+    font-family: Noto Sans KR !important;
+    color: antiquewhite !important;
+    font-weight: bold !important;
+}
+
+/*===================== Home ======================*/ 
+
+/*===================== Analysis (Multiple) ======================*/ 
+
+.custom_run_button{
+    color: white;
+    background-color: mediumpurple;
+    border-color: mediumpurple;
+    font-weight: bold;
+}
+
+.custom_clear_button{
+    color: white;
+    background-color:mediumseagreen;
+    border-color: mediumseagreen;
+    font-weight: bold;
+}
+
+/*=====================  Analysis (Single) ======================*/ 
+
+
