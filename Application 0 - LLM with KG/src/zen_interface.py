@@ -1,11 +1,13 @@
-import time
-import random
+import json
 import requests
 import streamlit as st
 
-def get_response(message: str):
-    response = requests.get(f'http://127.0.0.1:8000/message_from_user/{message}')
-    return response.json()
+from zen_utils import json_packaging
+
+def from_interface_to_router(message: str):
+    payload = json_packaging(message)
+    response = requests.post(f'http://127.0.0.1:8000/from_interface_to_router/', data = payload)
+    return json.loads(response.content)["message"]
 
 def init():
     st.title("Zen")
@@ -21,9 +23,9 @@ def chat():
             st.markdown(prompt)
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("assistant"):
-            response = get_response(prompt)
-            st.markdown(response)
-        st.session_state.messages.append({"role": "assistant", "content": response})
+            message = from_interface_to_router(prompt)
+            st.markdown(message)
+        st.session_state.messages.append({"role": "assistant", "content": message})
 
 if __name__ == "__main__":
     init()
